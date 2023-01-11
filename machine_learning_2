@@ -1,0 +1,308 @@
+import numpy as np
+fish_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0,35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0, 9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]
+
+fish_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0, 6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]
+
+fish_target = np.concatenate((np.ones(35),np.zeros(14)))
+import numpy as np
+fish_Data = np.column_stack((fish_length,fish_weight))
+from sklearn.model_selection import train_test_split
+train_input, test_input, train_target, test_target = train_test_split(fish_Data,fish_target,random_state=42)
+print(train_input)
+
+import matplotlib.pyplot as plt
+
+plt.scatter(train_input[:,0],train_input[:,1])
+plt.scatter(25,150, marker = '^')
+plt.show()
+
+from sklearn.neighbors import KNeighborsClassifier
+kn = KNeighborsClassifier()
+kn.fit(train_input,train_target)
+kn.score(test_input, test_target)
+
+from sklearn.neighbors import KNeighborsClassifier
+import matplotlib.pyplot as plt
+
+kn = KNeighborsClassifier()
+kn.fit(train_input,train_target)
+disatnces, indexes = kn.kneighbors([[25,150]])
+
+plt.scatter(train_input[:,0],train_input[:,1])
+plt.scatter(25,150,marker ='^')
+plt.scatter(train_input[indexes,0],train_input[indexes,1],marker='o')
+plt.show()
+
+print(train_input[indexes])
+
+print(train_target[indexes])
+
+from sklearn.neighbors import KNeighborsClassifier
+import matplotlib.pyplot as plt
+kn = KNeighborsClassifier()
+kn.fit(train_input,train_target)
+disatnces, indexes = kn.kneighbors([[25,150]])
+
+plt.scatter(train_input[:,0],train_input[:,1])
+plt.scatter(25,150,marker ='^')
+plt.xlim((0,1000))
+plt.scatter(train_input[indexes,0],train_input[indexes,1],marker='o')
+plt.show()
+
+distances , indexes = kn.kneighbors([[25,150]]) # 25,150의 k최근접이웃 5개의 거리와 인덱스번호
+
+plt.scatter(train_input[:,0],train_input[:,1])
+plt.scatter(25,150,marker='^')
+plt.scatter(train_input[indexes,0], train_input[indexes,1], marker = 'D')
+plt.show()
+
+distances
+
+plt.scatter(train_input[:,0],train_input[:,1])
+plt.scatter(25,150,marker = '^')
+plt.scatter(train_input[indexes,0],train_input[indexes,1],marker='D')
+plt.xlim((0,1000))
+plt.show()
+
+"""## 표준 점수로 변환"""
+
+mean = np.mean(train_input,axis=0)
+std = np.std(train_input, axis = 0)
+print(mean,std)
+
+train_scaled = (train_input-mean)/std
+new = ([25,150]-mean) / std
+
+plt.scatter(train_scaled[:,0],train_scaled[:,1])
+plt.scatter(new[0],new[1],marker='^')
+plt.show()
+
+from sklearn.neighbors import KNeighborsClassifier
+kn = KNeighborsClassifier()
+kn.fit(train_scaled,train_target)
+
+test_scaled = (test_input-mean) / std
+kn.score(test_scaled,test_target)
+
+distances , indexes = kn.kneighbors([new])
+
+
+print(train_scaled[indexes])
+
+plt.scatter(fish_length,fish_weight)
+
+perch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0,
+       21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7,
+       23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5,
+       27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0,
+       39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5,
+       44.0])
+perch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0,
+       115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0,
+       150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0,
+       218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0,
+       556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0,
+       850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0,
+       1000.0])
+
+from sklearn.model_selection import train_test_split
+train_input, test_input, train_target, test_target = train_test_split(perch_length,perch_weight,random_state=42)
+
+train_input=train_input.reshape(-1,1)
+test_input=test_input.reshape(-1,1)
+
+from sklearn.neighbors import KNeighborsRegressor
+knr = KNeighborsRegressor(n_neighbors=3)
+knr.fit(train_input,train_target)
+
+print(knr.predict([[50]]))
+
+distances, indexes = knr.kneighbors([[50]])
+
+plt.scatter(train_input,train_target)
+plt.scatter(50,1010,marker='^')
+plt.scatter(train_input[indexes],train_target[indexes],marker='D')
+
+print(np.mean(train_target[indexes]))
+
+"""## **선형회귀**"""
+
+from sklearn.linear_model import LinearRegression
+lr = LinearRegression()
+
+lr.fit(train_input, train_target)
+print(lr.predict([[50]]))
+print( lr.coef_)
+print( lr.intercept_ )
+
+print( lr.coef_)
+print( lr.intercept_ )
+
+plt.scatter(train_input , train_target) 	                                   # 데이터
+plt.plot([15,50], [15 * lr.coef_ + lr.intercept_ , 50 * lr.coef_ + lr.intercept_]) # 직선
+plt.scatter(50,1241.8, marker='^')
+
+lr.score(test_input,test_target)
+
+lr.score(train_input,train_target)
+
+"""## **다항회귀**"""
+
+import pandas as pd
+train_poly = np.column_stack((train_input ** 2 , train_input))
+test_poly = np.column_stack((test_input**2 ,test_input))
+print(train_poly)
+
+
+
+"""## 4 - 1 로지스틱 회귀
+
+"""
+
+import pandas as pd
+fish = pd.read_csv("https://bit.ly/fish_csv_data")
+fish.head(5)
+
+pd.unique(fish["Species"])
+
+import numpy as np
+fish_input = fish[['Weight','Length','Diagonal','Height','Width']].to_numpy()
+fish_input[:5]
+fish_target = fish["Species"].to_numpy()
+
+from sklearn.model_selection import train_test_split
+train_input, test_input,train_target, test_target = train_test_split( fish_input, fish_target, random_state = 42 )
+
+from sklearn.preprocessing import StandardScaler
+ss = StandardScaler()
+ss.fit(train_input)
+train_scaled = ss.transform(train_input)
+test_scaled = ss.transform(test_input)
+
+from sklearn.neighbors import KNeighborsClassifier
+Kn = KNeighborsClassifier(n_neighbors=3)
+Kn.fit(train_scaled,train_target)
+print(Kn.score(train_scaled,train_target))
+print(Kn.score(test_scaled,test_target))
+
+Kn.classes_
+
+Kn.predict(test_scaled[:5])
+
+import numpy as np
+proba = Kn.predict_proba(test_scaled[:5])
+print(np.round(proba, decimals=4))
+
+distances, indexes = Kn.kneighbors(test_scaled[3:4])
+print(train_target[indexes])
+
+import numpy as np
+import matplotlib.pyplot as plt
+z = np.arange( -5, 5 , 0.1)
+phi = 1 / ( 1 + np.exp(-z))
+plt.plot(z , phi)
+plt.xlabel('z')
+plt.ylabel('phi')
+plt.show()
+
+char_arr = np.array(['A','B','C','D','E'])
+print(char_arr[[True,False,True,False,False]])
+
+bream_smelt_indexes = (train_target == "Bream" ) | (train_target == "Smelt")
+train_bream_smelt = train_scaled[bream_smelt_indexes]
+target_bream_smelt = train_target[bream_smelt_indexes]
+
+from sklearn.linear_model import LogisticRegression
+lr = LogisticRegression()
+lr.fit( train_bream_smelt, target_bream_smelt )
+
+print(lr.predict(train_bream_smelt[:5]))
+print('\n')
+print(lr.classes_)
+
+lr.predict_proba(train_bream_smelt[:5])
+
+lr.classes_
+
+print( lr.coef_, lr.intercept_ )
+
+decision = lr.decision_function(train_bream_smelt[:5])
+print(decision)
+
+from scipy.special import expit
+print(expit(decision))
+
+lr = LogisticRegression(C=20, max_iter = 1000)
+lr.fit(train_scaled, train_target)
+
+print(lr.score(train_scaled, train_target))
+print(lr.score(test_scaled, test_target))
+
+lr.predict(test_scaled[:5])
+
+proba = lr.predict_proba(test_scaled[:5])
+np.round(proba, decimals = 3)
+
+lr.classes_
+
+decision = lr.decision_function(test_scaled[:5])
+print(np.round(decision, decimals=2))
+
+from scipy.special import softmax
+proba = softmax(decision, axis = 1)
+print(np.round(proba, decimals = 3))
+
+import pandas as pd
+fish = pd.read_csv("https://bit.ly/fish_csv_data")
+
+fish_input = fish[['Weight','Length','Diagonal','Height','Width']].to_numpy()
+fish_target = fish['Species'].to_numpy()
+
+from sklearn.model_selection import train_test_split
+train_input, test_input,train_target,test_target = train_test_split(fish_input,fish_target,random_state=42)
+
+from sklearn.preprocessing import StandardScaler
+ss = StandardScaler()
+ss.fit(train_input)
+train_scaled = ss.transform(train_input)
+test_scaled = ss.transform(test_input)
+
+from sklearn.linear_model import SGDClassifier
+sc = SGDClassifier(loss='log', max_iter=10 , random_state=42)
+sc.fit(train_scaled,train_target)
+
+print(sc.score(train_scaled, train_target))
+print(sc.score(test_scaled, test_target))
+
+sc.partial_fit(train_scaled, train_target)
+print(sc.score(train_scaled, train_target))
+print(sc.score(test_scaled, test_target))
+
+import numpy as np
+from sklearn.linear_model import SGDClassifier
+
+sc = SGDClassifier(loss='log', random_state= 42)
+train_score = []
+test_score = []
+classes = np.unique(train_target)
+
+for _ in range(0,300):
+  sc.partial_fit(train_scaled, train_target, classes = classes )
+  train_score.append(sc.score(train_scaled,train_target))
+  test_score.append(sc.score(test_scaled,test_target))
+
+import matplotlib.pyplot as plt
+plt.plot(train_score)
+plt.plot(test_score)
+plt.xlabel('epoch')
+plt.ylabel('accuracy')
+plt.show()
+
+sc = SGDClassifier(loss='log', max_iter = 100, tol=None, random_state=42)
+sc.fit(train_scaled, train_target)
+
+sc = SGDClassifier(loss='log', max_iter = 100, tol=None, random_state = 42 )
+sc.fit(train_scaled, train_target)
+
+print(sc.score(train_scaled,train_target))
+print(sc.score(test_scaled,test_target))
