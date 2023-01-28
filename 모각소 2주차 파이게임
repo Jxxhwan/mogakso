@@ -12,6 +12,7 @@ pygame의 dinogame에 대해서 공부했습니다.
 랜덤 포레스트 알고리즘, 엑스트라 트리, 그레디언트 부스팅, 히스토그램기반 그레디이언트 부스팅 등에 대해 공부했습니다.
 
 
+
 import pygame   # 파이게임 import
 import os       # os import
 import random   # 방해물의 랜덤등장을 위한 함수
