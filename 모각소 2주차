@@ -1,0 +1,66 @@
+2023-1-28  2주차
+
+(공통 공부 - pygame(dinogame))   +  개인공부(머신러닝)   
+pygame의 dinogame에 대해서 공부했습니다.
+
+이번에는 random 함수로 게임에서 등장할 방해물들을 random하게 등장시키는 방법, 
+난이도 조절을 할 때 점수가 1씩 상승할때 마다 게임의 속도가 빨라지게 하는 방법 등을 배웠습니다.
+
+개인 공부로는 머신러닝 앙상블 학습에 대해 배웠습니다.
+앙상블 학습의 정의, 유형( 보팅, 배깅 , 부스팅 )
+
+랜덤 포레스트 알고리즘, 엑스트라 트리, 그레디언트 부스팅, 히스토그램기반 그레디이언트 부스팅 등에 대해 공부했습니다.
+
+
+import pygame   # 파이게임 import
+import os       # os import
+import random   # 방해물의 랜덤등장을 위한 함수
+pygame.init()   #초기화
+
+# Global Constants   # 전역변수 크기 설정
+SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1100
+SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+RUNNING = [pygame.image.load(os.path.join("Assets/Cheeto", "Cheeto.png")),   # 기존에는 공룡이지만, 아주대의 상징인 치토로 바꿔 게임을 진행시켰습니다.
+           pygame.image.load(os.path.join("Assets/Cheeto", "Cheeto.png"))]
+JUMPING = pygame.image.load(os.path.join("Assets/Cheeto", "Cheeto.png"))
+DUCKING = [pygame.image.load(os.path.join("Assets/Cheeto", "Cheeto.png")),
+           pygame.image.load(os.path.join("Assets/Cheeto", "Cheeto.png"))]
+
+SMALL_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus1.png")),
+                pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus2.png")),   # 방해물
+                pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus3.png"))]
+LARGE_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus1.png")),          # 방해물
+                pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus2.png")),
+                pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus3.png"))]
+
+BIRD = [pygame.image.load(os.path.join("Assets/Bird", "Bird1.png")),          # 방해물
+        pygame.image.load(os.path.join("Assets/Bird", "Bird2.png"))]
+ 
+CLOUD = pygame.image.load(os.path.join("Assets/Other", "Cloud.png"))           # 방해물
+
+BG = pygame.image.load(os.path.join("Assets/Other", "Track.png"))
+
+
+class Dinosaur: # Dinosaur 은 기존의 캐릭터 ( 실행할 때에는 cheeto가 등장)
+    X_POS = 80
+    Y_POS = 310
+    Y_POS_DUCK = 340
+    JUMP_VEL = 8.5
+
+    def __init__(self):
+        self.duck_img = DUCKING
+        self.run_img = RUNNING
+        self.jump_img = JUMPING
+
+        self.dino_duck = False
+        self.dino_run = True
+        self.dino_jump = False
+
+        self.step_index = 0
+        self.jump_vel = self.JUMP_VEL
+        self.image = self.run_img[0]
+        self.dino_rect = self.image.get_rect()
+        self.dino_rect.x = self.X_POS
+        self.dino_rect.y = self.Y_POS
